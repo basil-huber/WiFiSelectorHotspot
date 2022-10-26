@@ -2,7 +2,7 @@ import re
 import subprocess
 
 INTERFACE_DEFAULT = 'wlan0'
-
+HOSTAPD_CONF_DEFAULT = '/etc/hostapd.conf'
 IFCONFIG_IP_REGEX = re.compile(r'inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
 
 
@@ -25,12 +25,13 @@ def network_interface_set_network(essid, password):
 
 
 class Hotspot:
-    def __init__(self):
+    def __init__(self, conf_path=HOSTAPD_CONF_DEFAULT):
         self._process = None
+        self._conf_path = conf_path
 
     def enable(self):
         if not self.is_enabled():
-            self._process = subprocess.Popen(['hostapd'])
+            self._process = subprocess.Popen(['hostapd', self._conf_path])
 
     def disable(self):
         if self.is_enabled():
