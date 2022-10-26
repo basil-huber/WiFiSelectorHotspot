@@ -26,7 +26,7 @@ class WifiSelectorServerThread(threading.Thread):
             return render_template('wifi_selector.html')
 
     def run(self) -> None:
-        self.app.run(debug=True, use_reloader=False, threaded=False, port=8080, host='0.0.0.0')
+        self.app.run(debug=True, use_reloader=False, threaded=False, port=80, host='0.0.0.0')
 
     @staticmethod
     def _connecting(essid: str):
