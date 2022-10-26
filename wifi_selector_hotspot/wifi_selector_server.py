@@ -21,12 +21,12 @@ class WifiSelectorServerThread(threading.Thread):
             essid = request.form['essid']
             password = request.form['password']
             self._send_network_parameters(essid, password)
-            return redirect(url_for('connecting', essid=essid))
+            return redirect(url_for('_connecting', essid=essid))
         else:
             return render_template('wifi_selector.html')
 
     def run(self) -> None:
-        self.app.run(debug=True, use_reloader=False, threaded=False, port=8080)
+        self.app.run(debug=True, use_reloader=False, threaded=False, port=8080, host='0.0.0.0')
 
     @staticmethod
     def _connecting(essid: str):
