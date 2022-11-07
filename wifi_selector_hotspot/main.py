@@ -1,4 +1,6 @@
 import logging
+import sys
+from logging.handlers import SysLogHandler
 from time import sleep
 
 from wifi_selector_hotspot.wifi_manager import network_interface_up, network_interface_is_connected, Hotspot, \
@@ -9,6 +11,9 @@ CONNECTION_TIMEOUT = 30  # seconds
 
 
 def main():
+    logging.basicConfig(handlers=[SysLogHandler(address='/dev/log'), logging.StreamHandler(sys.stdout)],
+                        level=logging.DEBUG, format='%(levelname)s WifiSelectorHotspot:%(module)s %(message)s')
+
     server = WifiSelectorServerThread()
     server.start()
     hotspot = Hotspot()
