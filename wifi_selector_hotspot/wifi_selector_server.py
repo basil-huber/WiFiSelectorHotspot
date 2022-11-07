@@ -12,7 +12,6 @@ class WifiSelectorServerThread(threading.Thread):
         self.app = Flask(__name__)
         self.app.add_url_rule('/wifi_selector', view_func=self._select_wifi, methods=['GET', 'POST'])
         self.app.add_url_rule('/', view_func=self._select_wifi, methods=['GET', 'POST'])
-        self.app.add_url_rule('/connecting/<essid>', view_func=self._connecting)
 
         self.network_parameter_queue = Queue()
 
@@ -21,16 +20,12 @@ class WifiSelectorServerThread(threading.Thread):
             essid = request.form['essid']
             password = request.form['password']
             self._send_network_parameters(essid, password)
-            return redirect(url_for('_connecting', essid=essid))
+            return render_template('selecting_wifi.html', essid=essid)
         else:
             return render_template('wifi_selector.html')
 
     def run(self) -> None:
         self.app.run(debug=True, use_reloader=False, threaded=False, port=80, host='0.0.0.0')
-
-    @staticmethod
-    def _connecting(essid: str):
-        return 'connecting to network %s' % essid
 
     def _send_network_parameters(self, essid: str, password: str) -> bool:
         try:
