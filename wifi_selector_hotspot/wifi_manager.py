@@ -6,7 +6,7 @@ HOSTAPD_CONF_DEFAULT = '/etc/hostapd.conf'
 DHCPD_CONF_DEFAULT = '/etc/udhcpd.conf'
 HOST_IP_DEFAULT = '192.168.2.1'
 NETMASK_DEFAULT = '255.255.255.0'
-IFCONFIG_IP_REGEX = re.compile(r'inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+IFCONFIG_IP_REGEX = re.compile(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
 
 
 def network_interface_up(interface_name=INTERFACE_DEFAULT):
