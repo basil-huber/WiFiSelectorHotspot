@@ -28,6 +28,7 @@ def main():
         logging.info('Could not connect to WiFi. Starting Hotspot')
         logging.debug('restarting network interface with IP for Hotspot')
         network_interface_down()
+        sleep(2)
         logging.debug('restarting network interface with IP for Hotspot')
         network_interface_set_ip_addr()
         logging.debug('enabling WiFi hotspot')
