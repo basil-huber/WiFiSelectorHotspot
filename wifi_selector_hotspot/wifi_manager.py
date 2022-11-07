@@ -3,7 +3,7 @@ import subprocess
 
 INTERFACE_DEFAULT = 'wlan0'
 HOSTAPD_CONF_DEFAULT = '/etc/hostapd.conf'
-DHCPD_CONF_DEFAULT = '/etc/dhcp/dhcpd.conf'
+DHCPD_CONF_DEFAULT = '/etc/udhcpd.conf'
 HOST_IP_DEFAULT = '192.168.2.1'
 NETMASK_DEFAULT = '255.255.255.0'
 IFCONFIG_IP_REGEX = re.compile(r'inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
@@ -40,8 +40,8 @@ class Hotspot:
 
     def enable(self):
         if not self.is_enabled():
-            self._dhcpd_process = subprocess.Popen(['dhcpd', '-f', '-cf', self._dhcpd_conf_path])
-            self._hostapd_process = subprocess.Popen(['hostapd', self._hostapd_conf_path])
+            self._dhcpd_process = subprocess.Popen(['udhcpd', '-S', '-f', self._dhcpd_conf_path])
+            self._hostapd_process = subprocess.Popen(['hostapd', '-s', self._hostapd_conf_path])
 
     def disable(self):
         if self.is_enabled():
