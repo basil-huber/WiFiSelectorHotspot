@@ -1,20 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<html>
-   <body>
-      <form action = "{{ url_for('_select_wifi') }}" method = "post">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>CONOVOX</title>
+</head>
+<body>
+
 <h1>CONOVOX</h1>
-<h2>Select Wi-Fi Network</h2>
-<p>Network Name (ESSID)</p>
-<p><input type = "text" name = "essid" /></p>
-<p>Password</p>
-<p><input type = "text" name = "password" /></p>
+
+<main class="login-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Connect to WiFi</div>
+                    <div class="card-body">
+                        <form name="wifi-selection" action="{{ url_for('_select_wifi') }}" method="post" novalidate
+                              - autocomplete="off">
+                            <div class="form-group row">
+                                <label for="essid" class="col-md-4 col-form-label text-md-right">WiFi Name</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="essid" class="form-control" name="essid" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <input type="password" id="password" class="form-control" name="password"
+                                               required>
+                                        <div class="input-group-append">
+    <span class="input-group-text" onclick="(function(e, el){
+          document.getElementById('password').type = document.getElementById('password').type == 'password' ? 'text' : 'password';
+          el.parentNode.lastElementChild.innerHTML = document.getElementById('password').type == 'password' ? '<i class=\'icon-eye\'>' : '<i class=\'icon-eye-blocked\'>';
+          })(event, this)">
+      <i class="icon-eye"></i>
+    </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Connect
+                                </button>
+                            </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</main>
 
 
-
-
-<p><input type = "submit" value = "submit" /></p>
-
-
-      </form>
-   </body>
+</body>
 </html>

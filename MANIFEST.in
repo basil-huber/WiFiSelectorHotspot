@@ -1,1 +1,3 @@
 include wifi_selector_hotspot/templates/*
+include wifi_selector_hotspot/static/css/*
+include wifi_selector_hotspot/static/fonts/*
