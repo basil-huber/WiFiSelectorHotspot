@@ -35,7 +35,7 @@ def main():
         hotspot.enable()
         logging.debug('Waiting for network parameters')
         essid, password = server.wait_for_network_parameters()
-        logging.info(f'received network parameters: ESSID: {essid};  Password: {password}. Connecting')
+        logging.info(f'received network parameters: ESSID: {essid}. Connecting...')
         hotspot.disable()
         network_interface_down()
         network_interface_set_network(essid, password)
