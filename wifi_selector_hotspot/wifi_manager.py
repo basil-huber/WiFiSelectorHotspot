@@ -1,5 +1,7 @@
+import logging
 import re
 import subprocess
+from time import sleep
 
 INTERFACE_DEFAULT = 'wlan0'
 HOSTAPD_CONF_DEFAULT = '/etc/hostapd.conf'
@@ -7,6 +9,35 @@ DHCPD_CONF_DEFAULT = '/etc/udhcpd.conf'
 HOST_IP_DEFAULT = '192.168.2.1'
 NETMASK_DEFAULT = '255.255.255.0'
 IFCONFIG_IP_REGEX = re.compile(r'inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+
+
+class WifiManager:
+    def __init__(self):
+        self.is_hotspot_enabled = False
+        self.hotspot = Hotspot()
+
+    @staticmethod
+    def enable_wifi():
+        network_interface_up()
+
+    @staticmethod
+    def disable_wifi():
+        network_interface_down()
+
+    def enable_hotspot(self):
+        if not self.is_hotspot_enabled:
+            logging.info('WifiManager: Enabling Hotspot')
+            self.disable_wifi()
+            sleep(2)
+            network_interface_set_ip_addr()
+            self.hotspot.enable()
+
+    def disable_hotspot(self):
+        if self.is_hotspot_enabled:
+            logging.info('WifiManager: disabling Hotspot')
+            self.hotspot.disable()
+            self.disable_wifi()
+            self.enable_wifi()
 
 
 def network_interface_up(interface_name=INTERFACE_DEFAULT):
