@@ -1,5 +1,6 @@
 import logging
 import sys
+import threading
 import time
 from logging.handlers import SysLogHandler
 from time import sleep
@@ -14,28 +15,34 @@ WIFI_RESET_BUTTON_CHANNEL = 18
 
 
 class WifiResetButton:
+    """ Thread to detect button pressing
+
+    Using a dedicated polling thread to avoid problems with debounce """
     LONG_PRESS_TIME = 10
 
     def __init__(self, button_gpio_channel, long_press_callback):
         self._press_timestamp = None
         self._long_press_callback = long_press_callback
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(button_gpio_channel, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(button_gpio_channel, GPIO.FALLING, callback=self._button_pressed_callback)
-        GPIO.add_event_detect(button_gpio_channel, GPIO.RISING, callback=self._button_released_callback)
+        self._gpio_channel = button_gpio_channel
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(button_gpio_channel, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-    def _button_pressed_callback(self):
-        logging.debug('Button pressed')
-        self._press_timestamp = time.time()
+        threading.Thread(target=self.main_loop).start()
 
-    def _button_released_callback(self):
-        if time.time() - self._press_timestamp > self.LONG_PRESS_TIME:
-            logging.debug('Button released: long press')
-            if self._long_press_callback:
-                self._long_press_callback()
-        else:
-            logging.debug('Button released: short press')
-        self._press_timestamp = None
+    def main_loop(self):
+        while True:
+            if GPIO.input(self._gpio_channel) == GPIO.HIGH:
+                if not self._press_timestamp:
+                    self._press_timestamp = time.time()
+                    logging.debug('Button pressed')
+                elif time.time() - self._press_timestamp > self.LONG_PRESS_TIME:
+                    logging.debug('Long press')
+                    self._press_timestamp = None
+                    if self._long_press_callback:
+                        self._long_press_callback()
+            else:
+                self._press_timestamp = None
+            time.sleep(1)
 
 
 def main():
@@ -46,7 +53,7 @@ def main():
     server.start()
     logging.info('Server running')
     wifi_manager = WifiManager()
-    WifiResetButton(WIFI_RESET_BUTTON_CHANNEL, wifi_manager.enable_hotspot())
+    WifiResetButton(WIFI_RESET_BUTTON_CHANNEL, wifi_manager.enable_hotspot)
     wifi_manager.enable_wifi()
 
     while True:

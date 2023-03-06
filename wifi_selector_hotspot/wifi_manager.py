@@ -26,18 +26,23 @@ class WifiManager:
 
     def enable_hotspot(self):
         if not self.is_hotspot_enabled:
-            logging.info('WifiManager: Enabling Hotspot')
+            logging.info('enabling Hotspot')
             self.disable_wifi()
+            sleep(2)
+            network_interface_set_network('', '00000000')  # set invalid network info
             sleep(2)
             network_interface_set_ip_addr()
             self.hotspot.enable()
+            self.is_hotspot_enabled = True
 
     def disable_hotspot(self):
         if self.is_hotspot_enabled:
-            logging.info('WifiManager: disabling Hotspot')
+            logging.info('disabling Hotspot')
             self.hotspot.disable()
             self.disable_wifi()
+            sleep(2)
             self.enable_wifi()
+            self.is_hotspot_enabled = False
 
 
 def network_interface_up(interface_name=INTERFACE_DEFAULT):
@@ -72,6 +77,7 @@ class Hotspot:
     def enable(self):
         if not self.is_enabled():
             self._dhcpd_process = subprocess.Popen(['udhcpd', '-S', '-f', self._dhcpd_conf_path])
+            sleep(2)
             self._hostapd_process = subprocess.Popen(['hostapd', '-s', self._hostapd_conf_path])
 
     def disable(self):
