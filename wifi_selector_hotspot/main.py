@@ -54,7 +54,6 @@ def main():
     logging.info('Server running')
     wifi_manager = WifiManager()
     WifiResetButton(WIFI_RESET_BUTTON_CHANNEL, wifi_manager.enable_hotspot)
-    wifi_manager.enable_wifi()
 
     while True:
         logging.debug('Waiting for network parameters')

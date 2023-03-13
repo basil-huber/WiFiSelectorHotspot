@@ -46,10 +46,11 @@ class WifiManager:
 
 
 def network_interface_up(interface_name=INTERFACE_DEFAULT):
+    logging.debug(f"enabling interface {interface_name}")
     subprocess.check_output(['ifup', interface_name])
 
-
 def network_interface_down(interface_name=INTERFACE_DEFAULT):
+    logging.debug(f"disabling interface {interface_name}")
     subprocess.check_output(['ifdown', interface_name])
 
 
