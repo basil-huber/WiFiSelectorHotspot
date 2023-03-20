@@ -7,8 +7,9 @@ from flask import Flask, request, redirect, url_for, render_template
 
 
 class WifiSelectorServerThread(threading.Thread):
-    def __init__(self):
+    def __init__(self, port=80):
         super().__init__()
+        self.port = port
         self.app = Flask(__name__)
         self.app.add_url_rule('/wifi_selector', view_func=self._select_wifi, methods=['GET', 'POST'])
         self.app.add_url_rule('/', view_func=self._select_wifi, methods=['GET', 'POST'])
@@ -25,7 +26,7 @@ class WifiSelectorServerThread(threading.Thread):
             return render_template('wifi_selector.html')
 
     def run(self) -> None:
-        self.app.run(debug=True, use_reloader=False, threaded=False, port=80, host='0.0.0.0')
+        self.app.run(debug=True, use_reloader=False, threaded=False, port=self.port, host='0.0.0.0')
 
     def _send_network_parameters(self, essid: str, password: str) -> bool:
         try:

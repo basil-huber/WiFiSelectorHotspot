@@ -1,3 +1,4 @@
+import argparse
 import logging
 import sys
 import threading
@@ -49,7 +50,13 @@ def main():
     logging.basicConfig(handlers=[SysLogHandler(address='/dev/log'), logging.StreamHandler(sys.stdout)],
                         level=logging.DEBUG, format='%(levelname)s WifiSelectorHotspot:%(module)s %(message)s')
 
-    server = WifiSelectorServerThread()
+    parser = argparse.ArgumentParser(description='Hotspot to select WiFi')
+    parser.add_argument('-p', '--port', type=int, required=False,
+                        help='Port for server')
+    
+    args = parser.parse_args()
+
+    server = WifiSelectorServerThread(args.port)
     server.start()
     logging.info('Server running')
     wifi_manager = WifiManager()
