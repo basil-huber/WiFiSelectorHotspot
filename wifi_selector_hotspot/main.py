@@ -53,13 +53,14 @@ def main():
     parser = argparse.ArgumentParser(description='Hotspot to select WiFi')
     parser.add_argument('-p', '--port', type=int, required=False,
                         help='Port for server')
-    
+
     args = parser.parse_args()
 
     server = WifiSelectorServerThread(args.port)
     server.start()
     logging.info('Server running')
     wifi_manager = WifiManager()
+    wifi_manager.enable_wifi()
     WifiResetButton(WIFI_RESET_BUTTON_CHANNEL, wifi_manager.enable_hotspot)
 
     while True:
